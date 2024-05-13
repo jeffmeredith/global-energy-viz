@@ -54,70 +54,33 @@
         // Data and color scale
         let data = new Map()
         let colorScale;
-        let maxValue = -Number.MAX_VALUE;
         for (const d of csvData) {
             if (+d.year === selectedYear) {
                 if (selectedColumn === "Population") {
                     data.set(d.iso_code, +d.population);
                 } else if (selectedColumn === "GDP") {
-                    if (+d.gdp > maxValue) {
-                        maxValue = +d.gdp;
-                    }
                     data.set(d.iso_code, +d.gdp)
                 } else if (selectedColumn === "Biofuel Consumption") {
-                    if (+d.biofuel_consumption > maxValue) {
-                        maxValue = +d.biofuel_consumption;
-                    }
                     data.set(d.iso_code, +d.biofuel_consumption)
                 } else if (selectedColumn === "Coal Consumption") {
-                    if (+d.coal_consumption > maxValue) {
-                        maxValue = +d.coal_consumption;
-                    }
                     data.set(d.iso_code, +d.coal_consumption)
                 } else if (selectedColumn === "Fossil Fuel Consumption") {
-                    if (+d.fossil_fuel_consumption > maxValue) {
-                        maxValue = +d.fossil_fuel_consumption;
-                    }
                     data.set(d.iso_code, +d.fossil_fuel_consumption)
                 } else if (selectedColumn === "Gas Consumption") {
-                    if (+d.gas_consumption > maxValue) {
-                        maxValue = +d.gas_consumption;
-                    }
                     data.set(d.iso_code, +d.gas_consumption)
                 } else if (selectedColumn === "Hydro Consumption") {
-                    if (+d.hydro_consumption > maxValue) {
-                        maxValue = +d.hydro_consumption;
-                    }
                     data.set(d.iso_code, +d.hydro_consumption)
                 } else if (selectedColumn === "Nuclear Consumption") {
-                    if (+d.nuclear_consumption > maxValue) {
-                        maxValue = +d.nuclear_consumption;
-                    }
                     data.set(d.iso_code, +d.nuclear_consumption)
                 } else if (selectedColumn === "Oil Consumption") {
-                    if (+d.oil_consumption > maxValue) {
-                        maxValue = +d.oil_consumption;
-                    }
                     data.set(d.iso_code, +d.oil_consumption)
                 } else if (selectedColumn === "Renewables Consumption") {
-                    if (+d.renewables_consumption > maxValue) {
-                        maxValue = +d.renewables_consumption;
-                    }
                     data.set(d.iso_code, +d.renewables_consumption)
                 } else if (selectedColumn === "Solar Consumption") {
-                    if (+d.solar_consumption > maxValue) {
-                        maxValue = +d.solar_consumption;
-                    }
                     data.set(d.iso_code, +d.solar_consumption)
                 } else if (selectedColumn === "Wind Consumption") {
-                    if (+d.wind_consumption > maxValue) {
-                        maxValue = +d.wind_consumption;
-                    }
                     data.set(d.iso_code, +d.wind_consumption)
                 } else if (selectedColumn === "Greenhouse Gas Emissions") {
-                    if (+d.greenhouse_gas_emissions > maxValue) {
-                        maxValue = +d.greenhouse_gas_emissions;
-                    }
                     data.set(d.iso_code, +d.greenhouse_gas_emissions)
                 }
             }
@@ -129,10 +92,54 @@
             colorScale = d3.scaleThreshold()
             .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
             .range(d3.schemeBlues[7]);
-        } else {
+        } else if (selectedColumn === "GDP") {
             colorScale = d3.scaleLinear()
-            .domain([-maxValue, maxValue])
-            .range(["white", "green"]);
+            .domain([1000000000, 10000000000, 100000000000, 1000000000000, 1000000000000, 10000000000000])
+            .range(d3.schemeGreens[7]);
+        } else if (selectedColumn === "Biofuel Consumption") {
+            colorScale = d3.scaleLinear()
+            .domain([5, 10, 50, 100, 200, 400])
+            .range(d3.schemePurples[7]);
+        } else if (selectedColumn === "Coal Consumption") {
+            colorScale = d3.scaleLinear()
+            .domain([100, 500, 1000, 10000, 15000, 20000])
+            .range(d3.schemeReds[7]);
+        } else if (selectedColumn === "Fossil Fuel Consumption") {
+            colorScale = d3.scaleLinear()
+            .domain([500, 1000, 5000, 10000, 20000, 30000])
+            .range(d3.schemeBlues[7]);
+        } else if (selectedColumn === "Gas Consumption") {
+            colorScale = d3.scaleLinear()
+            .domain([100, 500, 1000, 4000, 6000, 8000])
+            .range(d3.schemeGreens[7]);
+        } else if (selectedColumn === "Hydro Consumption") {
+            colorScale = d3.scaleLinear()
+            .domain([100, 200, 500, 1000, 2000, 3000])
+            .range(d3.schemePurples[7]);
+        } else if (selectedColumn === "Nuclear Consumption") {
+            colorScale = d3.scaleLinear()
+            .domain([100, 300, 500, 1000, 1500, 2100])
+            .range(d3.schemeReds[7]);
+        } else if (selectedColumn === "Oil Consumption") {
+            colorScale = d3.scaleLinear()
+            .domain([100, 500, 1000, 4000, 7000, 10000])
+            .range(d3.schemeBlues[7]);
+        } else if (selectedColumn === "Renewables Consumption") {
+            colorScale = d3.scaleLinear()
+            .domain([100, 500, 1500, 3000, 4000, 5000])
+            .range(d3.schemeGreens[7]);
+        } else if (selectedColumn === "Solar Consumption") {
+            colorScale = d3.scaleLinear()
+            .domain([1, 10, 50, 100, 200, 500])
+            .range(d3.schemePurples[7]);
+        } else if (selectedColumn === "Wind Consumption") {
+            colorScale = d3.scaleLinear()
+            .domain([1, 10, 40, 100, 500, 1000])
+            .range(d3.schemeReds[7]);
+        } else if (selectedColumn === "Greenhouse Gas Emissions") {
+            colorScale = d3.scaleLinear()
+            .domain([10, 100, 500, 1000, 2000, 4000])
+            .range(d3.schemeBlues[7]);
         }
         svg.append("g")
         .selectAll("path")
