@@ -209,7 +209,7 @@
 
     svg.append("text")
         .attr("x", 10)
-        .attr("y", height - 10) 
+        .attr("y", height - 12) 
         .text(s); 
 
     // Remove old legend items
@@ -304,7 +304,7 @@
         </select>
     </div>
 
-    <svg id="my_dataviz" width="1500" height="700"></svg>
+    <svg id="my_dataviz" width="1500" height="670"></svg>
     <div id="tooltip" style="position: absolute; display: none; padding: 10px; background-color: white; border: 1px solid #ccc; pointer-events: none;"></div>
 
 </div>
