@@ -92,54 +92,67 @@
             colorScale = d3.scaleThreshold()
             .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
             .range(d3.schemeBlues[7]);
+            createLegend(colorScale, "Unit of Measurement: Number of People");
         } else if (selectedColumn === "GDP") {
             colorScale = d3.scaleLinear()
             .domain([1000000000, 10000000000, 100000000000, 1000000000000, 1000000000000, 10000000000000])
             .range(d3.schemeGreens[7]);
+            createLegend(colorScale, "Unit of Measurement: USD");
         } else if (selectedColumn === "Biofuel Consumption") {
             colorScale = d3.scaleLinear()
             .domain([5, 10, 50, 100, 200, 400])
             .range(d3.schemePurples[7]);
+            createLegend(colorScale, "Unit of Measurement: TWh (Terrawatt hours)");
         } else if (selectedColumn === "Coal Consumption") {
             colorScale = d3.scaleLinear()
             .domain([100, 500, 1000, 10000, 15000, 20000])
             .range(d3.schemeReds[7]);
+            createLegend(colorScale, "Unit of Measurement: TWh (Terrawatt hours)");
         } else if (selectedColumn === "Fossil Fuel Consumption") {
             colorScale = d3.scaleLinear()
             .domain([500, 1000, 5000, 10000, 20000, 30000])
             .range(d3.schemeBlues[7]);
+            createLegend(colorScale, "Unit of Measurement: TWh (Terrawatt hours)");
         } else if (selectedColumn === "Gas Consumption") {
             colorScale = d3.scaleLinear()
             .domain([100, 500, 1000, 4000, 6000, 8000])
             .range(d3.schemeGreens[7]);
+            createLegend(colorScale, "Unit of Measurement: TWh (Terrawatt hours)");
         } else if (selectedColumn === "Hydro Consumption") {
             colorScale = d3.scaleLinear()
             .domain([100, 200, 500, 1000, 2000, 3000])
             .range(d3.schemePurples[7]);
+            createLegend(colorScale, "Unit of Measurement: Number of People");
         } else if (selectedColumn === "Nuclear Consumption") {
             colorScale = d3.scaleLinear()
             .domain([100, 300, 500, 1000, 1500, 2100])
             .range(d3.schemeReds[7]);
+            createLegend(colorScale, "Unit of Measurement: TWh (Terrawatt hours)");
         } else if (selectedColumn === "Oil Consumption") {
             colorScale = d3.scaleLinear()
             .domain([100, 500, 1000, 4000, 7000, 10000])
             .range(d3.schemeBlues[7]);
+            createLegend(colorScale, "Unit of Measurement: TWh (Terrawatt hours)");
         } else if (selectedColumn === "Renewables Consumption") {
             colorScale = d3.scaleLinear()
             .domain([100, 500, 1500, 3000, 4000, 5000])
             .range(d3.schemeGreens[7]);
+            createLegend(colorScale, "Unit of Measurement: TWh (Terrawatt hours)");
         } else if (selectedColumn === "Solar Consumption") {
             colorScale = d3.scaleLinear()
             .domain([1, 10, 50, 100, 200, 500])
-            .range(d3.schemePurples[7]);
+            .range(d3.schemeReds[7]);
+            createLegend(colorScale, "Unit of Measurement: TWh (Terrawatt hours)");
         } else if (selectedColumn === "Wind Consumption") {
             colorScale = d3.scaleLinear()
             .domain([1, 10, 40, 100, 500, 1000])
-            .range(d3.schemeReds[7]);
+            .range(d3.schemeOranges[7]);
+            createLegend(colorScale, "Unit of Measurement: TWh (Terrawatt hours)");
         } else if (selectedColumn === "Greenhouse Gas Emissions") {
             colorScale = d3.scaleLinear()
             .domain([10, 100, 500, 1000, 2000, 4000])
-            .range(d3.schemeBlues[7]);
+            .range(d3.schemeGreens[6]);
+            createLegend(colorScale, "Unit of Measurement: TWh (Terrawatt hours)");
         }
         svg.append("g")
         .selectAll("path")
@@ -161,6 +174,9 @@
         .on("mouseout", () => {
             tooltip.style("display", "none");
         });
+
+
+
     }
 
     onMount(() => {
@@ -180,7 +196,98 @@
                 draw_choropleth();
             });
         }
+    
+
     });
+
+
+    function createLegend(colorScale, s) {
+    const legendWidth = 200; // Width of the legend box
+    const legendRectSize = 20; // dimensions of the colored squares
+    const legendSpacing = 4; // spacing between squares
+    const legendHeight = legendRectSize + legendSpacing;
+
+    svg.append("text")
+        .attr("x", 10)
+        .attr("y", height - 10) 
+        .text(s); 
+
+    // Remove old legend items
+    svg.selectAll(".legend").remove();
+
+    // Add new legend group
+    const legend = svg.append("g")
+      .attr("class", "legend")
+      .attr("transform", `translate(${width - legendWidth - 20}, 20)`);
+
+    // Add legend title
+    legend.append("text")
+      .attr("x", -50)
+      .attr("y", -5)
+      .text("Hover over the countries!!")
+      .style("font-weight", "bold");
+    
+
+    // Create legend items
+    const legendItem = legend.selectAll('.legend-item')
+        .data(colorScale.range())
+        .enter()
+        .append('g')
+        .attr('class', 'legend-item')
+        .attr('transform', (d, i) => {
+            return `translate(0,${i * legendHeight})`;
+        });
+
+    // Add colored squares
+    legendItem.append('rect')
+        .attr('x', -77)
+        .attr('y', 10)
+        .attr('width', legendRectSize)
+        .attr('height', legendRectSize)
+        .style('fill', d => d);
+
+    // Add text labels
+    legendItem.append('text')
+        .attr('x', legendRectSize + legendSpacing - 77)
+        .attr('y', legendRectSize - legendSpacing + 10)
+        .text(function(d) {
+            if (colorScale.invertExtent) {
+                const extent = colorScale.invertExtent(d);
+                if (extent[0] == null) {
+                    return `No data`;
+                }
+                if (extent[1] == undefined) {
+                    return 'More than ' + formatNumberWithCommas(extent[0]);
+                } else{
+                    return formatNumberWithCommas(extent[0]) + ' - ' + formatNumberWithCommas(extent[1])
+                }
+            }
+            else {
+                const domain = colorScale.domain();
+                const range = colorScale.range();
+                const index = range.indexOf(d);
+                const rangeValue = index < domain.length ? domain[index] : domain[domain.length - 1];
+                if (index === range.length - 1 && index === domain.length) {
+                return `More than ${formatNumberWithCommas(rangeValue)}`;
+            } else if (index === 0) {
+                return `Less than ${formatNumberWithCommas(rangeValue)}`;
+            } else if (index < domain.length) {
+                return `${formatNumberWithCommas(domain[index - 1])} - ${formatNumberWithCommas(rangeValue)}`;
+            } else {
+                return `No data`; // Handle the case where there is no corresponding data
+            }
+        }
+    });
+    
+    function formatNumberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    }
+
+
+
+
+
 </script>
 
 <div style="text-align:center;">
@@ -199,6 +306,7 @@
 
     <svg id="my_dataviz" width="1500" height="700"></svg>
     <div id="tooltip" style="position: absolute; display: none; padding: 10px; background-color: white; border: 1px solid #ccc; pointer-events: none;"></div>
+
 </div>
 
 <style>
@@ -244,4 +352,5 @@
         background-color: #fff;
         color: #333;
     }
+
 </style>
