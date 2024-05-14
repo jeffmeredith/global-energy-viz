@@ -184,6 +184,7 @@
 </script>
 
 <div style="text-align:center;">
+    <h3>Write-up <a href="https://docs.google.com/document/d/1lHdUQZcc8RADYanFeSNzh0y4YZ2MpvFf/edit?usp=sharing&ouid=116419232595005144189&rtpof=true&sd=true" target="_blank">here</a>.</h3>
     <h2 class="title">{selectedColumn} in {selectedYear}</h2>
     <div class="controls">
         <input type="range" min="1901" max="2018" step="1" bind:value={selectedYear} class="slider" />
